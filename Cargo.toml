@@ -1,0 +1,11 @@
+[package]
+name = "postier"
+version = "0.1.0"
+authors = [
+  "Félix Saparelli <me@passcod.name>"
+]
+
+[dependencies]
+hyper = "0.6"
+time = "0.1"
+
