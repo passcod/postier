@@ -8,7 +8,6 @@ use hyper::net::Fresh;
 use hyper::server::{Request, Response};
 use hyper::status::StatusCode;
 use std::env;
-use std::fs::File;
 use std::process::Command;
 
 macro_rules! header {
@@ -46,33 +45,12 @@ fn hook(req: Request, mut res: Response<Fresh>) {
         file = "hooks/default".to_string();
     }
 
-    let handle = match File::open(&file) {
-        Ok(h) => h,
-        Err(e) => {
-            println!("[{}] Could not open file {}: {}", now(), file, e);
-            end!(res, StatusCode::NotFound);
-        }
-    };
-
-    let metadata = match handle.metadata() {
-        Ok(d) => d,
-        Err(e) => {
-            println!("[{}] Could get file metadata for {}: {}", now(), file, e);
-            end!(res, StatusCode::NotFound);
-        }
-    };
-
-    if !metadata.is_file() {
-        println!("[{}] Not a file: {}", now(), file);
-        end!(res, StatusCode::NotFound);
-    }
-
     println!("[{}] Running {}...", now(), &file);
     let status = match Command::new(&file).status() {
         Ok(c) => c,
         Err(e) => {
             println!("[{}] Error executing {}: {}", now(), file, e);
-            end!(res, StatusCode::NoContent);
+            end!(res, StatusCode::NotFound);
         }
     };
 
