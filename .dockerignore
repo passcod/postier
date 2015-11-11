@@ -1,0 +1,7 @@
+.git
+src
+README.md
+Cargo.*
+
+target/debug
+target/release/*/*
